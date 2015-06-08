@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang = "es">
+    <head>
+        <meta charset="UTF-8"> 
+        <title>Buscar Libros</title>        
+    </head>
+    <body>
+        <div align="center">
+
+            <form name="buscarlibros" action="resultados.html" method="post">
+                Buscar&nbsp;<input type="text" name="txtbuscar" class="textbox" placeholder="" required="required" maxlength="100" autofocus/>
+                por
+                <select name="filtro" class="combobox">
+                    <option value="todo">Título y Autor</option>
+                    <option value="titulo">Título</option>
+                    <option value="autor">Autor</option>
+                </select>
+                <input type="submit" name="btnbuscar" value="Consultar" class="boton"/>
+            </form>
+        </div>        
+    </body>
+</html>

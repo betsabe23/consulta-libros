@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang = "es">
+    <head>
+        <title>Resultados</title>        
+        <meta charset="UTF-8">         
+    </head>
+    
+    <body>
+        <div class="contenido-biblio">
+            
+            <br>
+                
+            <?php
+                $busqueda = $_POST["txtbuscar"];
+                $filtro = $_POST["filtro"];
+                
+                $array = explode(" ", $busqueda);
+                $busquedapalabras = implode(" +", $array);
+                $busquedapalabras = '+'. $busquedapalabras;
+
+                
+                include('conexion.php');
+                
+                if ($filtro == "todo")
+                {
+                    $consulta = "select autores, titulo, edicion, editorial, anio, url
+                                 from busquedalibros
+                                 where match (autores, titulo)
+                                 against ('$busquedapalabras' in boolean mode);";
+                }
+                else if ($filtro == "titulo")
+                {                            
+                    $consulta = "select autores, titulo, edicion, editorial, anio, url
+                                 from busquedalibros
+                                 where match (titulo)
+                                 against ('$busquedapalabras' in boolean mode);";
+                }
+                else if ($filtro == "autor")
+                {
+                    $consulta = "select autores, titulo, edicion, editorial, anio, url
+                                 from busquedalibros
+                                 where match (autores)
+                                 against ('$busquedapalabras' in boolean mode);";
+                }
+                
+                $resultado = mysql_query($consulta, $conexion) or die(mysql_error());
+                $conteo = mysql_num_rows($resultado);
+            ?>
+
+            <h1 class="h1">Resultados de la b&uacute;squeda</h1>
+                               
+            <br/>
+            
+            <span class ='texto-resultados'><strong><?php echo $conteo; ?></strong> resultados encontrados para la b&uacute;squeda: <strong><?php echo $busqueda; ?></strong></span>
+                
+            <br></br>
+            
+            <?php 
+                if ($conteo > 0) 
+                {
+                    while ($libros = mysql_fetch_assoc($resultado))
+                    {
+            ?>
+            
+            <table cellpadding="5">
+                <tr>
+                    <td>
+                        <img src="../imgs/vinieta.jpg"/>
+                    </td>
+                    <td>
+                        <a href="<?php echo $libros['url'] ?>" target="_blank"><i><?php echo $libros['autores'] ?></i> <b><?php echo $libros['titulo'] ?></b>. <?php echo $libros['edicion'] ?>a edición. Editorial <?php echo $libros['editorial'] . '.' ?> <?php echo $libros['anio'] ?></img></a>
+                    </td>
+                </tr>
+            </table>
+            
+            <?php
+                    }
+                }
+            ?>
+            
+            </br>
+            <div align="center" class="texto-resultados">
+            </div>
+            <br></br>
+            
+        </div>
+    </body>
+</html>
